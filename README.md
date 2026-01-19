@@ -79,10 +79,19 @@
 ## TODO
 
 - [ ] 降低使用门槛，加个界面，打包成一个精简的exe，并提供release下载
-- [ ] 迭代解析结果
-  - [ ] 重点内容加粗
-  - [ ] 辅助中文释义
+- [X] 迭代解析结果
+  - [X] 重点内容加粗
+  - [X] 辅助中文释义
+  - [X] 确保输出结果一定包含美式音标
+- [ ] 添加卡片后自动增加发音
 
+
+## 效果
+![从原始网页中复制内容](images/vocab.png)
+![通过执行函数的形式解析单词](images/run_main.png)
+![添加完的卡片](images/effect_anki.png)
+
+> 注意，为了让添加完的卡片这么美观，需要在Anki中 [添加css](## 添加css)
 
 
 ## ✨ 功能特性
@@ -190,7 +199,146 @@ process_vocabulary(raw_text)
 2023-10-27 10:00:02 - INFO - 单词 'spurious' 已存在于 Deck 'Vocabulary' 中。跳过插入。
 ```
 
+## 添加css
+
+为了让卡片背面与效果图一样好看，添加以下css
+```css
+/* --- 基础卡片设置 --- */
+.card {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    text-align: left; /* 英文解释段落左对齐阅读体验更好 */
+    color: #333;
+    background-color: white;
+    line-height: 1.5;
+}
+
+/* --- 单词本体 (Front) --- */
+/* 如果你想让背面也显示单词大标题，可以在背面模板顶部加 {{Front}} */
+.card-front {
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* --- 音标 (IPA) --- */
+.ipa {
+    font-family: "Lucida Sans Unicode", "Arial Unicode MS", sans-serif;
+    font-size: 1.1em;
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: -10px;
+}
+
+/* --- 语境解释 (Blurb) --- */
+/* 这是重点区域，做成了引用块的样式 */
+.blurb {
+    background-color: #f4f6f8; /* 浅灰背景 */
+    border-left: 5px solid #3498db; /* 左侧蓝色竖条 */
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+    color: #444;
+}
+
+/* --- Blurb 中的高亮重点 (关键需求 1) --- */
+/* LLM 输出的 <b>complicated</b> 会应用此样式 */
+.blurb b {
+    color: #d35400; /* 醒目的深橘色/赭石色 */
+    background-color: rgba(211, 84, 0, 0.1); /* 淡淡的背景色增加强调感 */
+    padding: 0 4px;
+    border-radius: 3px;
+    font-weight: 700;
+}
+
+/* --- 分割线 --- */
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+    margin: 20px 0;
+}
+
+/* --- 释义列表 --- */
+ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+li {
+    margin-bottom: 12px;
+}
+
+/* --- 词性 (adj/noun) --- */
+li b {
+    color: #2980b9; /* 蓝色 */
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    margin-right: 5px;
+}
+
+/* --- 同义词 (Synonyms) --- */
+li i {
+    display: block; /* 换行显示 */
+    font-size: 0.85em;
+    color: #7f8c8d; /* 灰色 */
+    margin-top: 2px;
+}
+
+/* ========================================
+   🌙 夜间模式适配 (Dark Mode)
+   Anki 会自动检测系统夜间模式
+   ======================================== */
+.nightMode .card {
+    background-color: #2f2f31;
+    color: #dcdcdc;
+}
+
+.nightMode .card-front {
+    color: #ffffff;
+}
+
+.nightMode .ipa {
+    color: #aaaaaa;
+}
+
+.nightMode .blurb {
+    background-color: #3a3a3a;
+    border-left-color: #5ea8ff;
+    color: #e0e0e0;
+}
+
+/* 夜间模式下的高亮颜色调整 */
+.nightMode .blurb b {
+    color: #ffaa80; /* 浅橙色，在黑底上更清晰 */
+    background-color: rgba(255, 170, 128, 0.15);
+}
+
+.nightMode hr {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+}
+
+.nightMode li b {
+    color: #6dd5ed; /* 浅蓝 */
+}
+
+.nightMode li i {
+    color: #999;
+}
+```
+
+![第一步](images/step1.png)
+![第二步](images/step2.png)
+![第三步](images/step3.png)
+
+
 ## ⚠️ 常见问题
+0.  **莫名其妙找不到deck**
+    * 务必确保Anki安装时选的语言是英文 *
 
 1.  **ConnectionRefusedError / 无法连接 AnkiConnect**
     *   检查 Anki 是否已打开。

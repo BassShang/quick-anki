@@ -24,33 +24,34 @@ LOG_DIR = os.getenv("LOG_DIR", "./logs")
 # --- Prompt 模版 ---
 PROMPT_TEMPLATE = """
 # Role
-You are an expert lexicographer and Anki card designer. Your task is to extract vocabulary information from raw web text (specifically from vocabulary.com) and format it into a structured JSON object suitable for Anki.
+You are an expert lexicographer, translator, and Anki card designer. Your goal is to process raw vocabulary text into a structured JSON object for Anki, enhancing it for learners who prefer English-English definitions but need auxiliary Chinese support.
 
 # Input Text
 {{RAW_TEXT}}
 
 # Processing Rules
 1. **Identify the Word**: Find the main headword.
-2. **IPA**: Extract the pronunciation (e.g., /.../).
-3. **The "Blurb"**: Vocabulary.com usually provides a conversational explanation paragraph (e.g., "Something false or inauthentic is..."). Identify this text. It is very important.
-4. **Definitions**: Extract the definitions (adjective, noun, etc.) and their synonyms.
+2. **IPA**: Extract the IPA pronunciation (e.g., /.../). **CRITICAL:** If the raw text does not contain an IPA, you MUST generate the standard American English IPA yourself.
+3. **The "Blurb" (Context)**: Locate the conversational explanation paragraph (common in Vocabulary.com).
+   - **Highlighting**: Analyze the blurb and use `<b>` tags to highlight **key takeaways**, such as core synonyms, defining characteristics, or powerful collocations (e.g., highlight "complicated", "intricate" inside the sentence). Do not bold entire sentences, only the distinct semantic keywords.
+4. **Definitions**: Extract the specific definitions (part of speech + meaning).
+   - **Translation**: For every English definition, append a **concise** Chinese translation in parentheses.
 5. **Clean Data**: Ignore UI elements like "Share", "IPA guide", or repeated headers.
 
 # Output Format (JSON)
 Return ONLY a valid JSON object with two keys: "front" and "back".
 
 1. **"front"**: The word itself.
-2. **"back"**: A specific HTML string containing the details.
-   - Use `<div>` for the IPA.
-   - Use `<blockquote>` or a styled `<div>` for the "Blurb" (the conversational explanation).
-   - Use `<ul>` and `<li>` for the specific definitions (e.g., "adjective: plausible but false").
-   - Highlight synonyms in `<i>` or `<span>`.
-   - Keep it concise but informative.
+2. **"back"**: A HTML string containing the details.
+   - Use `<div class='ipa'>` for the IPA.
+   - Use `<div class='blurb'>` for the highlighted conversational explanation.
+   - Use `<ul>` and `<li>` for definitions.
+   - Format for list items: `<b>pos:</b> English definition (简短中文) <br><i>Synonyms: ...</i>`
 
 # Example JSON Structure
 {
-  "front": "spurious",
-  "back": "<div class='ipa'>/ˈspjʊriɪs/</div><br><div class='blurb'>Something false or inauthentic is spurious. Don't trust spurious ideas...</div><hr><ul><li><b>adj:</b> plausible but false <br><i>Synonyms: specious, false</i></li><li><b>adj:</b> intended to deceive <br><i>Synonyms: inauthentic, counterfeit</i></li></ul>"
+  "front": "sophisticated",
+  "back": "<div class='ipa'>/səˈfɪstɪkeɪtɪd/</div><br><div class='blurb'>If something is sophisticated, it's <b>complicated</b> and <b>intricate</b>. The inner workings of a computer are <b>sophisticated</b>. It can also refer to <b>having good taste</b>.</div><hr><ul><li><b>adj:</b> complex or intricate (复杂精密的) <br><i>Synonyms: advanced</i></li><li><b>adj:</b> having worldly knowledge and refinement (老练的；富有经验的) <br><i>Synonyms: urbane, cultured</i></li></ul>"
 }
 """
 
