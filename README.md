@@ -91,7 +91,7 @@
 ![通过执行函数的形式解析单词](images/run_main.png)
 ![添加完的卡片](images/effect_anki.png)
 
-注意，为了让添加完的卡片这么美观，需要在Anki中 [添加css](##添加css)
+注意，为了让添加完的卡片这么美观，需要在Anki中 [添加css](#添加css)
 
 
 ## ✨ 功能特性
