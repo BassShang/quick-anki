@@ -78,7 +78,7 @@
 
 ## TODO
 
-- [ ] 降低使用门槛，加个界面，打包成一个精简的exe，并提供release下载
+- [X] 写成一个 Anki 的插件 [已完成，移步这里](https://github.com/BassShang/quick-anki-addon)
 - [X] 迭代解析结果
   - [X] 重点内容加粗
   - [X] 辅助中文释义
