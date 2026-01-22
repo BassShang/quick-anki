@@ -1,4 +1,5 @@
 # Quick-Anki
+这个项目已经写成Anki插件，没必要继续维护了。请移步 [Quick-Anki 插件](https://github.com/BassShang/quick-anki-addon)
 
 > **Automate your vocabulary acquisition with the power of LLMs.**
 
